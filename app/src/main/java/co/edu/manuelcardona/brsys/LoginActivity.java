@@ -79,7 +79,25 @@ public class LoginActivity extends AppCompatActivity {
                             statusCode = response.statusCode;
                         }
 
-                        Log.e("post", error.getMessage());
+                        if(response.statusCode == 404)
+                        {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
+
+                            Toast.makeText(getApplicationContext(), "El usuario no existe", Toast.LENGTH_LONG).show();
+                        }
+
+                        if(response.statusCode == 406)
+                        {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
+
+                            Toast.makeText(getApplicationContext(), "Contraseña Incorrecta", Toast.LENGTH_LONG).show();
+                        }
+
+
+
+                        //Log.e("post", error.getMessage());
                     }
                 });
 
