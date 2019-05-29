@@ -25,11 +25,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private RequestQueue mRequestQueue;
     private String baseUrl = "http://192.168.0.18:8000/api/";
-    private static final String EXTRA_NAME = "co.edu.manuelcardona.brsys.NAME";
-    private static final String EXTRA_LASTNAME = "co.edu.manuelcardona.brsys.LASTNAME";
-    private static final String EXTRA_PHONE = "co.edu.manuelcardona.brsys.PHONE";
-    private static final String EXTRA_ID = "co.edu.manuelcardona.brsys.ID";
-    private static final String EXTRA_TYPEUSER = "co.edu.manuelcardona.brsys.TYPEUSER";
+
+    public static final String EXTRA_NAME = "co.edu.manuelcardona.brsys.NAME";
+    public static final String EXTRA_LASTNAME = "co.edu.manuelcardona.brsys.LASTNAME";
+    public static final String EXTRA_PHONE = "co.edu.manuelcardona.brsys.PHONE";
+    public static final String EXTRA_ID = "co.edu.manuelcardona.brsys.ID";
+    public static final String EXTRA_TYPEUSER = "co.edu.manuelcardona.brsys.TYPEUSER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(type_user == 3)
                         {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
                             Intent intent = new Intent(getApplicationContext(), BarberActivity.class);
                             intent.putExtra(EXTRA_NAME, name);
                             intent.putExtra(EXTRA_LASTNAME, lastName);
@@ -97,6 +100,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(type_user == 4)
                         {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
                             Intent intent = new Intent(getApplicationContext(), UserActivity.class);
                             intent.putExtra(EXTRA_NAME, name);
                             intent.putExtra(EXTRA_LASTNAME, lastName);
@@ -136,6 +141,14 @@ public class LoginActivity extends AppCompatActivity {
                             ((EditText) findViewById(R.id.tPassword)).setText("");
 
                             Toast.makeText(getApplicationContext(), "Contraseña Incorrecta", Toast.LENGTH_LONG).show();
+                        }
+
+                        if(response.statusCode != 404 && response.statusCode != 406)
+                        {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
+
+                            Toast.makeText(getApplicationContext(), "Error Desconocido " +response.statusCode , Toast.LENGTH_LONG).show();
                         }
 
 
