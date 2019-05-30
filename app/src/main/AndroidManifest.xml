@@ -30,7 +30,8 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".UserActivity" />
         <activity android:name=".BarberActivity" />
-        <activity android:name=".TurnBarber2Activity"></activity>
+        <activity android:name=".TurnBarber2Activity" />
+        <activity android:name=".Turn_listActivity"></activity>
     </application>
 
 </manifest>
