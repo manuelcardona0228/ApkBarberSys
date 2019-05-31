@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +22,13 @@ public class TurnAdapter extends RecyclerView.Adapter<TurnAdapter.MyViewHolder> 
 
         public MyViewHolder(View view){
             super(view);
-
+            id = (TextView) view.findViewById(R.id.id);
+            day = (TextView) view.findViewById(R.id.day);
+            hour = (TextView) view.findViewById(R.id.hour);
+            barber_id = (TextView) view.findViewById(R.id.barber_id);
+            servide_id = (TextView) view.findViewById(R.id.service_id);
+            customer_id = (TextView) view.findViewById(R.id.customer_id);
+            state = (TextView) view.findViewById(R.id.state);
         }
     }
 
@@ -54,7 +62,7 @@ public class TurnAdapter extends RecyclerView.Adapter<TurnAdapter.MyViewHolder> 
         holder.barber_id.setText(""+turn.getBarber_id());
         holder.servide_id.setText(""+turn.getServide_id());
         holder.customer_id.setText(""+turn.getCustomer_id());
-        holder.state.setText(""+turn.isState());
+        holder.state.setText(""+turn.getState());
     }
 
     @Override

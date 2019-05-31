@@ -10,14 +10,14 @@ public class Turn {
     private int barber_id;
     private int servide_id;
     private int customer_id;
-    private boolean state;
+    private int state;
 
     public Turn(){
 
     }
 
     public Turn(int id, String day, String hour, int barber_id, int servide_id, int customer_id,
-                boolean state) {
+                int state) {
         this.id = id;
         this.day = day;
         this.hour = hour;
@@ -76,11 +76,9 @@ public class Turn {
         this.customer_id = customer_id;
     }
 
-    public boolean isState() {
-        return state;
-    }
+    public int getState() { return state; }
 
-    public void setState(boolean state) {
+    public void setState(int state) {
         this.state = state;
     }
 }

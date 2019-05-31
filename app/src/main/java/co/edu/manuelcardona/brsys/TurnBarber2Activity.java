@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -93,7 +94,7 @@ public class TurnBarber2Activity extends AppCompatActivity {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Cargando ...");
-        //progressDialog.show();
+        progressDialog.show();
 
         HashMap<String, String> params = new HashMap<String, String>();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new JSONObject(params),
@@ -101,18 +102,17 @@ public class TurnBarber2Activity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        //progressDialog.dismiss();
+                        progressDialog.dismiss();
                         JSONArray turns = null;
                         try {
                             turns = response.getJSONArray("data");
-                            String message = "turn length: "+turns.length();
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            //String message = "turn length: " + turns.length();
+                            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                             if (myDataset.size() > 0) {
-                                myDataset.clear();
+                                 myDataset.clear();
                             }
 
                             for (int i = 0; i < turns.length(); i++) {
-                                //id, day, hour, barber_id, servide_id, customer_id, state;
                                 JSONObject tmp = turns.getJSONObject(i);
                                 Turn turn = new Turn(tmp.getInt("id"),
                                         tmp.getString("day"),
@@ -120,15 +120,16 @@ public class TurnBarber2Activity extends AppCompatActivity {
                                         tmp.getInt("barber_id"),
                                         tmp.getInt("service_id"),
                                         tmp.getInt("customer_id"),
-                                        tmp.getBoolean("state"));
+                                        tmp.getInt("state"));
+                                //Toast.makeText(getApplicationContext(), "Turn: "+turn.getDay(), Toast.LENGTH_LONG).show();
                                 myDataset.add(turn);
                             }
-
                             myAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Log.e("Prueba", "MyDataset.size() : "+myDataset.size());
                     }
                 },
                 new Response.ErrorListener() {
@@ -140,9 +141,15 @@ public class TurnBarber2Activity extends AppCompatActivity {
                         if(error.networkResponse != null){
                             response = error.networkResponse;
                             statusCode = response.statusCode;
+                            Toast.makeText(getApplicationContext(), "Error "+statusCode, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
         mRequestQueue.add(request);
+    }
+
+    public void onVolver(View view)
+    {
+        this.finish();
     }
 }

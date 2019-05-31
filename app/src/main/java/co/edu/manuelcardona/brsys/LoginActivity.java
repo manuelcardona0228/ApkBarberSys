@@ -135,6 +135,14 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "El usuario no existe", Toast.LENGTH_LONG).show();
                         }
 
+                        if(response.statusCode == 403)
+                        {
+                            ((EditText) findViewById(R.id.tEmail)).setText("");
+                            ((EditText) findViewById(R.id.tPassword)).setText("");
+
+                            Toast.makeText(getApplicationContext(), "Acceso Denegado", Toast.LENGTH_LONG).show();
+                        }
+
                         if(response.statusCode == 406)
                         {
                             ((EditText) findViewById(R.id.tEmail)).setText("");
@@ -143,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Contraseña Incorrecta", Toast.LENGTH_LONG).show();
                         }
 
-                        if(response.statusCode != 404 && response.statusCode != 406)
+                        if(response.statusCode != 404 && response.statusCode != 403 && response.statusCode != 406)
                         {
                             ((EditText) findViewById(R.id.tEmail)).setText("");
                             ((EditText) findViewById(R.id.tPassword)).setText("");
