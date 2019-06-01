@@ -147,9 +147,4 @@ public class TurnBarber2Activity extends AppCompatActivity {
                 });
         mRequestQueue.add(request);
     }
-
-    public void onVolver(View view)
-    {
-        this.finish();
-    }
 }
