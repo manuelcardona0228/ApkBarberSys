@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,88 +27,65 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserActivity extends AppCompatActivity {
+public class HeadquartersActivity extends AppCompatActivity {
 
-    private String name = "";
-    private String lasName = "";
-    private String phone = "";
     private int id = 0;
-    private int type_user = 0;
-    ///////
-    private int idBarbershop = 0;
-
-    public static final String EXTRA_USER_ID = "co.edu.manuelcardona.brsys.USER_ID";
-    public static final String EXTRA_USER_TYPEUSER = "co.edu.manuelcardona.brsys.USER_TYPEUSER";
-
-    public static final String EXTRA_ID_BARBERSHOP = "co.edu.manuelcardona.brsys.ID_BARBERSHOP";
-
-    private RecyclerView myListBarbershops;
+    /////
+    private RecyclerView myList;
     private RecyclerView.LayoutManager layoutManager;
-    private BarbershopAdapter myAdapter;
-    private List<Barbershop> myDataset = new ArrayList<>();
+    private HeadquarterAdapter myAdapter;
+    private List<Headquarter> myDataset = new ArrayList<>();
 
     private RequestQueue mRequestQueue;
     private String baseUrl = "http://192.168.0.18:8000/api/";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.activity_headquarter);
+
 
         mRequestQueue = Volley.newRequestQueue(this);
+        ////
 
         Intent intent = getIntent();
-        name = intent.getStringExtra(LoginActivity.EXTRA_NAME);
-        lasName = intent.getStringExtra(LoginActivity.EXTRA_LASTNAME);
-        phone = intent.getStringExtra(LoginActivity.EXTRA_PHONE);
-        id = intent.getIntExtra(LoginActivity.EXTRA_ID, -1);
-        type_user = intent.getIntExtra(LoginActivity.EXTRA_TYPEUSER, -1);
-        Toast.makeText(this, "Bienvenido "+ name + " "+ lasName, Toast.LENGTH_LONG).show();
-        //TextView welcome = (TextView) findViewById(R.id.tUserWelcome);
-        //welcome.setText("Bienvenido "+ name + " "+ lasName);
+        id = intent.getIntExtra(UserActivity.EXTRA_ID_BARBERSHOP, -1);
+        Toast.makeText(this,"id: "+id, Toast.LENGTH_LONG).show();
 
-        myListBarbershops = (RecyclerView) findViewById(R.id.myListBarbershops);
-        ///////
-        //////
+        myList = (RecyclerView) findViewById(R.id.myListHeadquarter);
 
-        myListBarbershops.setHasFixedSize(true);
-        ///
-
+        //
+        //
         layoutManager = new LinearLayoutManager(this);
-        myListBarbershops.setLayoutManager(layoutManager);
+        myList.setLayoutManager(layoutManager);
 
-        ////
-        myAdapter = new BarbershopAdapter(myDataset);
-        myListBarbershops.setAdapter(myAdapter);
+        //
+        myAdapter = new HeadquarterAdapter(myDataset);
+        myList.setAdapter(myAdapter);
 
-        ///
+        //
         myAdapter.setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int position = myList.indexOfChild(view);
 
-                int position = myListBarbershops.indexOfChild(view);
-                idBarbershop = myDataset.get(position).getId();
-                String businessName = ((TextView) view.findViewById(R.id.businessName)).getText().toString();
-                String message = position + ": " + businessName+": "+idBarbershop;
+                String businesName = ((TextView) view.findViewById(R.id.businessNameH)).getText().toString();
+                String message = position +": "+ businesName;
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(getApplicationContext(), HeadquartersActivity.class);
-                intent.putExtra(EXTRA_ID_BARBERSHOP, idBarbershop);
-                startActivity(intent);
             }
         });
 
         try {
             prepareData();
-        }catch (JSONException e){
+        }catch (JSONException e)
+        {
             e.printStackTrace();
         }
+
     }
 
-    private void prepareData() throws JSONException{
-
-        String url = baseUrl + "barbershops";
+    private void prepareData() throws JSONException {
+        String url = baseUrl + "barbershop/headquarter/"+id;
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Cargando ...");
@@ -119,18 +97,22 @@ public class UserActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressDialog.dismiss();
-                        JSONArray barbershops = null;
+                        JSONArray headquarters = null;
 
                         try {
-                            barbershops = response.getJSONArray("data");
+                            headquarters = response.getJSONArray("data");
+                            Log.e("Size", "onResponse: "+headquarters.getJSONObject(0).getString("businessName"));
                             if (myDataset.size() > 0) {
                                 myDataset.clear();
                             }
 
-                            for (int i = 0; i < barbershops.length(); i++) {
-                                JSONObject tmp = barbershops.getJSONObject(i);
-                                Barbershop barbershop = new Barbershop(tmp.getString("businessName"), tmp.getInt("id"));
-                                myDataset.add(barbershop);
+                            for (int i = 0; i < headquarters.length(); i++) {
+                                Log.e("Size", "onEntre: ");
+                                JSONObject tmp = headquarters.getJSONObject(i);
+                                Headquarter headquarter = new Headquarter(tmp.getString("businessName"),
+                                        tmp.getString("address"), tmp.getString("phone"),
+                                        (float) tmp.getDouble("longitude"), (float) tmp.getDouble("latitude"));
+                                myDataset.add(headquarter);
                             }
 
                             myAdapter.notifyDataSetChanged();
@@ -138,6 +120,7 @@ public class UserActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Log.e("Size", "onSize: "+myDataset.size());
                     }
                 },
                 new Response.ErrorListener() {
@@ -156,3 +139,4 @@ public class UserActivity extends AppCompatActivity {
         mRequestQueue.add(request);
     }
 }
+
